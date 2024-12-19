@@ -12,6 +12,16 @@ const cors = require("@koa/cors");
 //dotenv
 require("dotenv").config();
 
+//mongoose
+const mongoose = require("mongoose");
+
+//route
+const router = require("./routes/routeItems.js"); 
+
+
+//model
+const oneMovie = require("./routes/model/item.js");
+
 //---------------------------Använder----------------------------------//
 
 //använder koa
@@ -23,13 +33,20 @@ app.use(cors());
 //använd bodyparser
 app.use(bodyParser());
 
+//använder router
+app.use(router.routes());
+
+//---------------------------Ansluter mongodb----------------------------------//
+
+mongoose.connect(process.env.URL)
+  .then(() => {
+    console.log("Ansluten")})
+  .catch(error => {
+    console.log("Misslyckades", error)});
 
 
 //---------------------------startar----------------------------------//
 
-//För local
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-    console.log("Servern startar");
+app.listen(process.env.PORT, () => {
+    console.log("Startar server");
 });
