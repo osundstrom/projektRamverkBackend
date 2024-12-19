@@ -25,9 +25,7 @@ const itemSchema = new mongoose.Schema({
         type: String,
         required: true,
     }},
-    { collection: "allStockItems" 
-
-});
+    { collection: "allStockItems" });
 
 //skapar model
 const itemModel = mongoose.model("itemModel", itemSchema);

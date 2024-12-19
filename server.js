@@ -1,4 +1,6 @@
 //---------------------------Allt som krävs----------------------------------//
+//dotenv
+require("dotenv").config();
 
 //koa
 const koa = require("koa");
@@ -10,14 +12,10 @@ const bodyParser = require("koa-bodyparser");
 const mongoose = require("mongoose");
 
 //route
-const router = require("./routes/routeItems.js"); 
-
+const itemsRouter = require("./routes/routeItems.js"); 
+const usersRouter = require("./routes/routeUsers.js"); 
 //cors
 const cors = require("@koa/cors");
-
-
-//dotenv
-require("dotenv").config();
 
 
 
@@ -38,7 +36,8 @@ app.use(cors());
 app.use(bodyParser());
 
 //använder router
-app.use(router.routes());
+app.use(itemsRouter.routes());
+app.use(usersRouter.routes());
 
 //---------------------------Ansluter mongodb----------------------------------//
 
