@@ -6,26 +6,30 @@ const koa = require("koa");
 //bodyparser
 const bodyParser = require("koa-bodyparser");
 
-//cors
-const cors = require("@koa/cors");
-
-//dotenv
-require("dotenv").config();
-
 //mongoose
 const mongoose = require("mongoose");
 
 //route
 const router = require("./routes/routeItems.js"); 
 
+//cors
+const cors = require("@koa/cors");
 
-//model
-const oneMovie = require("./routes/model/item.js");
+
+//dotenv
+require("dotenv").config();
+
+
+
+
+
+
 
 //---------------------------Använder----------------------------------//
 
 //använder koa
 const app = new koa();
+
 
 //använd cors
 app.use(cors());

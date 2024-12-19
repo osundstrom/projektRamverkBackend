@@ -1,3 +1,4 @@
+
 //mongoose
 const mongoose = require("mongoose");
 
@@ -23,7 +24,8 @@ const itemSchema = new mongoose.Schema({
     itemImage:{
         type: String,
         required: true,
-    }
+    }},
+    { collection: "allStockItems" 
 
 });
 
