@@ -4,8 +4,34 @@ const router = new Router();
 //model
 const itemModel = require("./model/item.js");
 
+//---------------------------GET----------------------------------//
+
+//Get förfrågan 
+router.get("/item", async (ctx) => { 
+    try {
+        
+        const allItems = await itemModel.find(); 
+        
+        
+        if (allItems.length > 0) {
+            ctx.body = allItems; 
+        } else {
+            ctx.status = 400; 
+            ctx.message = "Inga produkter hittades"  
+        }
 
 
+    } catch (error) { 
+        ctx.status = 500; 
+        ctx.body = {
+            message: "Error, kunde ej hämta produkter", 
+            error: error.message 
+        };
+    }
+});
+
+
+//---------------------------POST----------------------------------//
 
 router.post("/item", async (ctx) => {
     try {
@@ -37,5 +63,9 @@ router.post("/item", async (ctx) => {
         };
     }
 });
+
+
+//---------------------------DELETE----------------------------------//
+
 
 module.exports = router;
