@@ -34,8 +34,6 @@ const userSchema = new mongoose.Schema({
 //-------------Lösenordet Hashas innan det sparas-------------------------//
 
 
-
-
 //pre-hook, den körs innan något sparas till databasen
 userSchema.pre("save", async function(next) { 
     try{
@@ -69,7 +67,7 @@ userSchema.statics.login = async function (email, password) {
         if(!oneUser) { 
             throw new error("Ogiltiga uppgifter"); }  
 
-        const passwordMatch = await oneUser.comparePassword(password);
+        const passwordMatch = await bcrypt.compare(password, oneUser.password);
         if(!passwordMatch) { 
             throw new error("Ogiltigta uppgifter");}
             
