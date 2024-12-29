@@ -6,7 +6,6 @@ const itemModel = require("./model/item.js");
 
 //---------------------------GET----------------------------------//
 
-//Get förfrågan 
 router.get("/item", async (ctx) => { 
     try {
         
@@ -66,6 +65,63 @@ router.post("/item", async (ctx) => {
 
 
 //---------------------------DELETE----------------------------------//
+
+router.delete("/item/:id", async (ctx) => {
+    const {id} = ctx.params; 
+    try {
+        const itemDelete = await itemModel.findByIdAndDelete(id); 
+        if(!itemDelete) { 
+            ctx.status = 404; 
+            ctx.body = {
+                message: "Hittar ingen produkt",
+            };
+            
+        }else { 
+            ctx.status = 200; 
+            ctx.body = {
+                message: "produkt borttagen",
+            }
+        }
+
+    } catch (error) { 
+        ctx.status = 400; 
+        ctx.body = {
+            message: "Misslyckad förfrågan",
+            error: error.message 
+        };
+    }
+});
+
+
+//---------------------------PUT----------------------------------//
+
+router.put("/item/:id", async (ctx) => {
+    const {id} = ctx.params; 
+    try {
+        const itemUpdated = await itemModel.findByIdAndUpdate(id, ctx.request.body);
+
+        if(!itemUpdated) {
+            ctx.status = 404; 
+            ctx.body = {
+                message: "Hittar ingen produkt",
+            };
+            
+        }else {
+            ctx.status = 200; 
+            
+            ctx.body = {
+                message: "Produkt är ändrad", 
+            };
+        }
+
+    } catch (error) { 
+        ctx.status = 400; 
+        ctx.body = {
+            message: "Misslyckad förfrågan", 
+            error: error.message 
+        };
+    }
+});
 
 
 module.exports = router;
