@@ -15,9 +15,34 @@ router.post("/register", async (ctx) => {
 
     if (!email || !password) {
         ctx.status = 400;
-        ctx.body = {error};
+        ctx.body = {error: "Epost eller lösen saknas"};
         return;
     }
+
+    if (!/[@]/.test(email)) { 
+        ctx.status = 400;
+        ctx.body = { error: "Ogiltigt e-postformat" };
+        return;
+    }
+
+    if (password.length < 8 ) { 
+        ctx.status = 400;
+        ctx.body = { error: "Minst 8 tecken i lösenordet" };
+        return; 
+    }
+
+    if (!/[A-ZÅÄÖ]/.test(password)) {  
+        ctx.status = 400;
+        ctx.body = { error: "Lösenordet måste ha en stor bokstav" };
+        return;
+    }
+    
+    if (!/[0-9]/.test(password)) { 
+        ctx.status = 400;
+        ctx.body = { error: "Lösenordet måste ha minst en siffra" };
+        return;
+    }
+
 
         const oneUser = await userModel.register(email, password);
         ctx.status = 201;
