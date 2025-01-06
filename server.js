@@ -17,7 +17,8 @@ const usersRouter = require("./routes/routeUsers.js");
 //cors
 const cors = require("@koa/cors");
 
-
+//JWT
+const jwt = require("jsonwebtoken");
 
 
 

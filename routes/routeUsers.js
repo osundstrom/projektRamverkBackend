@@ -4,6 +4,9 @@ const router = new Router();
 
 const userModel = require("./model/user.js");
 
+//JWT
+const jwt = require("jsonwebtoken");
+
 
 //-----------Post förfågan för att skapa användare----------------------//
 router.post("/register", async (ctx) => {
@@ -28,12 +31,22 @@ router.post("/register", async (ctx) => {
 
 //-----------Post förfågan för att logga in ----------------------//
 
+
 router.post("/login", async (ctx) => {
     const { email, password } = ctx.request.body;
     try {
         const oneUser = await userModel.login(email, password);
+        token = jwt.sign({
+            id: oneUser._id}, 
+            process.env.JWT_SECRET_KEY, 
+            {expiresIn: "1h"});
+
         ctx.status = 200;
-        ctx.body = {message: "Inloggad som: ", email};
+        ctx.body = {
+        message: `Inloggad som: ${email}`,
+        recivedToken: {token},
+        };
+
     } catch (error) {
         ctx.status = 401;
         //console.log("test")
