@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 //bcrypt
 const bcrypt = require("bcrypt");
 
+//jwt
+const jwt = require("jsonwebtoken");
 
 
 
@@ -72,7 +74,13 @@ userSchema.statics.login = async function (email, password) {
         if(!passwordMatch) { 
             throw new error("Ogiltigta uppgifter");}
             
-        return oneUser;
+            const token = jwt.sign(
+                { id: oneUser._id, email: oneUser.email },
+                process.env.JWT_SECRET,
+                { expiresIn: "1h" } 
+            );
+
+        return { user: oneUser, token };
     } catch (error) { 
         throw error;
     }
