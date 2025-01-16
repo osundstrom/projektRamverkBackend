@@ -2,8 +2,11 @@ const Router = require('@koa/router');
 const router = new Router();
 
 //model
-const itemModel = require("./model/item.js");
+const itemModel = require("./model/item.js")
 
+const authenticeJWT = require("./authenticate.js");
+
+router.use(authenticeJWT); 
 //---------------------------GET----------------------------------//
 
 router.get("/item", async (ctx) => { 
