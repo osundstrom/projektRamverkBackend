@@ -8,20 +8,20 @@ const itemModel = require("./model/item.js");
 
 router.get("/item", async (ctx) => { 
     try {
-        
+        //hämtar alla objekt
         const allItems = await itemModel.find(); 
         
-        
+        //kollar om de är fler än 0 objekt
         if (allItems.length > 0) {
-            ctx.body = allItems; 
-        } else {
-            ctx.status = 400; 
-            ctx.message = "Inga produkter hittades"  
+            ctx.body = allItems; //om de finns returneras dessa
+        } else { //annars
+            ctx.status = 400; //statuskod
+            ctx.message = "Inga produkter hittades"  //meddlande
         }
 
 
-    } catch (error) { 
-        ctx.status = 500; 
+    } catch (error) { //vid error
+        ctx.status = 500; //statuskod
         ctx.body = {
             message: "Error, kunde ej hämta produkter", 
             error: error.message 
@@ -35,9 +35,10 @@ router.get("/item", async (ctx) => {
 router.post("/item", async (ctx) => {
     try {
         
+        //hämta värden
         const { itemCode, itemBrand, itemStock, itemPrice, itemImage} = ctx.request.body;
 
-        
+        //skapar ny av itemModel
         const stockItem = new itemModel({
             itemCode,
             itemBrand,
@@ -46,16 +47,17 @@ router.post("/item", async (ctx) => {
             itemImage
         });
 
+        //sparar
         await stockItem.save(); 
 
         ctx.body = {
-            message: "produkt tillagd", 
-            stockItem: stockItem 
+            message: "produkt tillagd", //meddelande
+            stockItem: stockItem  //
         };
-        ctx.status = 201; 
-    } catch (error) { 
+        ctx.status = 201; //status 201, created
+    } catch (error) { //vid error
         console.error(error);
-        ctx.status = 400; 
+        ctx.status = 400; // status 400, bad request
         ctx.body = {
             message: "Misslyckad, samtliga fält måste vara ifyllda. ", 
             error: error.message 
@@ -67,26 +69,29 @@ router.post("/item", async (ctx) => {
 //---------------------------DELETE----------------------------------//
 
 router.delete("/item/:id", async (ctx) => {
+    //hämtar ID
     const {id} = ctx.params; 
     try {
+        //radera baserat på id
         const itemDelete = await itemModel.findByIdAndDelete(id); 
+        //om item ej hittas
         if(!itemDelete) { 
-            ctx.status = 404; 
+            ctx.status = 404; //not found
             ctx.body = {
-                message: "Hittar ingen produkt",
+                message: "Hittar ingen produkt",//meddelande
             };
             
         }else { 
-            ctx.status = 200; 
+            ctx.status = 200; //status ok
             ctx.body = {
-                message: "produkt borttagen",
+                message: "produkt borttagen", //meddelande
             }
         }
 
     } catch (error) { 
-        ctx.status = 400; 
+        ctx.status = 400; //status, bads request
         ctx.body = {
-            message: "Misslyckad förfrågan",
+            message: "Misslyckad förfrågan", //meddelande
             error: error.message 
         };
     }
@@ -96,18 +101,21 @@ router.delete("/item/:id", async (ctx) => {
 //---------------------------PUT----------------------------------//
 
 router.put("/item/:id", async (ctx) => {
+    //hämtar id
     const {id} = ctx.params; 
     try {
+        //updaterat baserat på id
         const itemUpdated = await itemModel.findByIdAndUpdate(id, ctx.request.body);
 
+        //om item ej hittas
         if(!itemUpdated) {
-            ctx.status = 404; 
+            ctx.status = 404; //not found
             ctx.body = {
-                message: "Hittar ingen produkt",
+                message: "Hittar ingen produkt", //meddelande
             };
             
         }else {
-            ctx.status = 200; 
+            ctx.status = 200; //ok
             
             ctx.body = {
                 message: "Produkt är ändrad", 
@@ -115,7 +123,7 @@ router.put("/item/:id", async (ctx) => {
         }
 
     } catch (error) { 
-        ctx.status = 400; 
+        ctx.status = 400; //bad request
         ctx.body = {
             message: "Misslyckad förfrågan", 
             error: error.message 
