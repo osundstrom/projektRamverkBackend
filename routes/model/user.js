@@ -74,13 +74,7 @@ userSchema.statics.login = async function (email, password) {
         if(!passwordMatch) { 
             throw new error("Ogiltigta uppgifter");}
             
-            const token = jwt.sign(
-                { id: oneUser._id, email: oneUser.email },
-                process.env.JWT_SECRET,
-                { expiresIn: "1h" } 
-            );
-
-        return { user: oneUser, token };
+        return oneUser;
     } catch (error) { 
         throw error;
     }
