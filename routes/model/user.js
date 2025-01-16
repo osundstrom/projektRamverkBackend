@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
 //pre-hook, den körs innan något sparas till databasen
 userSchema.pre("save", async function(next) { 
     try{
-        if(this.isNew || this.isModified(password)) { 
+        if(this.isNew || this.isModified("password")) { 
             const encryptedPassword = await bcrypt.hash(this.password, 12); 
             this.password = encryptedPassword; 
         }
@@ -51,7 +51,7 @@ userSchema.pre("save", async function(next) {
 //----------------------------registrera en användare------------------------------//
 userSchema.statics.register = async function(email, password) {
     try {
-        const oneUser = new this({email, password}); 
+        const oneUser = new this({email: email.toLowerCase(), password}); 
         await oneUser.save(); 
         return oneUser; 
     } catch (error) { 
@@ -64,7 +64,7 @@ userSchema.statics.register = async function(email, password) {
 
 userSchema.statics.login = async function (email, password) {
     try {
-        const oneUser = await this.findOne({email}); 
+        const oneUser = await this.findOne({email: email.toLowerCase()}); 
         if(!oneUser) { 
             throw new error("Ogiltiga uppgifter"); }  
 

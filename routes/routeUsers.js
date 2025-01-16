@@ -61,7 +61,7 @@ router.post("/login", async (ctx) => {
     const { email, password } = ctx.request.body;
     try {
         const oneUser = await userModel.login(email, password);
-        token = jwt.sign({
+        const token = jwt.sign({
             id: oneUser._id}, 
             process.env.JWT_SECRET_KEY, 
             {expiresIn: "1h"});
