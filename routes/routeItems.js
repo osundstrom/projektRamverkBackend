@@ -4,7 +4,7 @@ const router = new Router();
 //model
 const itemModel = require("./model/item.js")
 
-const authenticeJWT = require("./routes/auth.js");
+const authenticeJWT = require("./auth.js");
 
 router.use(authenticeJWT); 
 //---------------------------GET----------------------------------//
