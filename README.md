@@ -61,5 +61,28 @@ En produkt(item) har struktur enligt nedan med JSON format.
 }
 ```
 
-
+itemCode: { 
+        type: String,
+        required: true, 
+        trim: true, 
+    },
+    itemBrand: { 
+        type: String,
+        required: true, 
+    },
+    itemStock: { 
+        type: Number,
+        required: true, 
+    },
+    itemPrice: { 
+        type: Number,
+        required: true, 
+    },
+    itemImage: {
+    type: Date,
+    default: () => {
+        const now = new Date();
+        
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
 
