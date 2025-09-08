@@ -21,10 +21,16 @@ const itemSchema = new mongoose.Schema({
         type: Number,
         required: true, 
     },
-    itemImage:{
-        type: Date,
-        default: Date.now
-    }},
+    itemImage: {
+    type: Date,
+    default: () => {
+        const now = new Date();
+        
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+}
+
+},
     { collection: "allStockItems" });
 
 //skapar model
