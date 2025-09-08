@@ -22,8 +22,8 @@ const itemSchema = new mongoose.Schema({
         required: true, 
     },
     itemImage:{
-        type: String,
-        required: true,
+        type: Date,
+        default: Date.now
     }},
     { collection: "allStockItems" });
 
