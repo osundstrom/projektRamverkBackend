@@ -77,7 +77,7 @@ router.delete("/item/:id", async (ctx) => {
     const {id} = ctx.params; 
     try {
         // Hitta item och kolla att det tillhör användaren
-        const item = await itemModel.findOne({ id: id, userId: ctx.state.user.id });
+        const item = await itemModel.findOne({ _id: id, userId: ctx.state.user._id });
         
         if(!item) { 
             ctx.status = 404; //not found
@@ -111,7 +111,7 @@ router.put("/item/:id", async (ctx) => {
     const {id} = ctx.params; 
     try {
         // Hitta item och kolla att det tillhör användaren
-        const item = await itemModel.findOne({ id: id, userId: ctx.state.user.id });
+        const item = await itemModel.findOne({ _id: id, userId: ctx.state.user._id });
         
         if(!item) {
             ctx.status = 404; //not found
@@ -124,7 +124,7 @@ router.put("/item/:id", async (ctx) => {
         // Uppdatera item
         const itemUpdated = await itemModel.findByIdAndUpdate(id, {
             ...ctx.request.body,
-            userId: ctx.state.user.id // Säkerställ att userId inte kan ändras
+            userId: ctx.state.user._id // Säkerställ att userId inte kan ändras
         }, { new: true });
 
         ctx.status = 200; //ok
