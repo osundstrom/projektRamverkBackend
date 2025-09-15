@@ -12,7 +12,7 @@ router.use(authenticeJWT);
 router.get("/item", async (ctx) => { 
     try {
         //hämtar alla objekt
-        const allItems = await itemModel.find({ userId: ctx.state.user._id }); 
+        const allItems = await itemModel.find({ userId: ctx.state.user.id }); 
         
         //kollar om de är fler än 0 objekt
         if (allItems.length > 0) {
@@ -48,7 +48,7 @@ router.post("/item", async (ctx) => {
             itemStock,
             itemPrice,
             itemImage,
-            userId: ctx.state.user._id  // Add the user ID from the JWT
+            userId: ctx.state.user.id  // Add the user ID from the JWT
         });
 
         //sparar
@@ -77,7 +77,7 @@ router.delete("/item/:id", async (ctx) => {
     const {id} = ctx.params; 
     try {
         // Hitta item och kolla att det tillhör användaren
-        const item = await itemModel.findOne({ _id: id, userId: ctx.state.user._id });
+        const item = await itemModel.findOne({ id: id, userId: ctx.state.user.id });
         
         if(!item) { 
             ctx.status = 404; //not found
@@ -111,7 +111,7 @@ router.put("/item/:id", async (ctx) => {
     const {id} = ctx.params; 
     try {
         // Hitta item och kolla att det tillhör användaren
-        const item = await itemModel.findOne({ _id: id, userId: ctx.state.user._id });
+        const item = await itemModel.findOne({ id: id, userId: ctx.state.user.id });
         
         if(!item) {
             ctx.status = 404; //not found
@@ -124,7 +124,7 @@ router.put("/item/:id", async (ctx) => {
         // Uppdatera item
         const itemUpdated = await itemModel.findByIdAndUpdate(id, {
             ...ctx.request.body,
-            userId: ctx.state.user._id // Säkerställ att userId inte kan ändras
+            userId: ctx.state.user.id // Säkerställ att userId inte kan ändras
         }, { new: true });
 
         ctx.status = 200; //ok

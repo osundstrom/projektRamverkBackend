@@ -71,7 +71,7 @@ router.post("/login", async (ctx) => {
         const oneUser = await userModel.login(email, password);
         //skapar token
         const token = jwt.sign({
-            _id: oneUser._id}, //användaren unika id för token
+            id: oneUser._id}, //användaren unika id för token
             process.env.JWT_SECRET_KEY, //använder från .env
             {expiresIn: "1h"}); //token giltig 1h
 
