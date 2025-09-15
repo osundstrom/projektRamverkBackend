@@ -22,11 +22,8 @@ const itemSchema = new mongoose.Schema({
         required: true, 
     },
     itemImage: {
-        type: Date,
-        default: () => {
-            const now = new Date();
-            return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        }
+        type: String,
+        required: false
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
