@@ -12,7 +12,7 @@ router.use(authenticeJWT);
 router.get("/item", async (ctx) => { 
     try {
         //hämtar alla objekt
-        const allItems = await itemModel.find(); 
+        const allItems = await itemModel.find({ userId: ctx.state.user._id }); 
         
         //kollar om de är fler än 0 objekt
         if (allItems.length > 0) {
@@ -47,7 +47,8 @@ router.post("/item", async (ctx) => {
             itemBrand,
             itemStock,
             itemPrice,
-            itemImage
+            itemImage,
+            userId: ctx.state.user._id  // Add the user ID from the JWT
         });
 
         //sparar
@@ -75,20 +76,22 @@ router.delete("/item/:id", async (ctx) => {
     //hämtar ID
     const {id} = ctx.params; 
     try {
-        //radera baserat på id
-        const itemDelete = await itemModel.findByIdAndDelete(id); 
-        //om item ej hittas
-        if(!itemDelete) { 
+        // Hitta item och kolla att det tillhör användaren
+        const item = await itemModel.findOne({ _id: id, userId: ctx.state.user._id });
+        
+        if(!item) { 
             ctx.status = 404; //not found
             ctx.body = {
-                message: "Hittar ingen produkt",//meddelande
+                message: "Hittar ingen produkt eller så har du inte behörighet",//meddelande
             };
-            
-        }else { 
-            ctx.status = 200; //status ok
-            ctx.body = {
-                message: "produkt borttagen", //meddelande
-            }
+            return;
+        }
+        
+        // Radera item
+        await itemModel.findByIdAndDelete(id);
+        ctx.status = 200; //status ok
+        ctx.body = {
+            message: "produkt borttagen", //meddelande
         }
 
     } catch (error) { 
@@ -107,23 +110,28 @@ router.put("/item/:id", async (ctx) => {
     //hämtar id
     const {id} = ctx.params; 
     try {
-        //updaterat baserat på id
-        const itemUpdated = await itemModel.findByIdAndUpdate(id, ctx.request.body);
-
-        //om item ej hittas
-        if(!itemUpdated) {
+        // Hitta item och kolla att det tillhör användaren
+        const item = await itemModel.findOne({ _id: id, userId: ctx.state.user._id });
+        
+        if(!item) {
             ctx.status = 404; //not found
             ctx.body = {
-                message: "Hittar ingen produkt", //meddelande
+                message: "Hittar ingen produkt eller så har du inte behörighet", //meddelande
             };
-            
-        }else {
-            ctx.status = 200; //ok
-            
-            ctx.body = {
-                message: "Produkt är ändrad", 
-            };
+            return;
         }
+
+        // Uppdatera item
+        const itemUpdated = await itemModel.findByIdAndUpdate(id, {
+            ...ctx.request.body,
+            userId: ctx.state.user._id // Säkerställ att userId inte kan ändras
+        }, { new: true });
+
+        ctx.status = 200; //ok
+        ctx.body = {
+            message: "Produkt är ändrad",
+            item: itemUpdated
+        };
 
     } catch (error) { 
         ctx.status = 400; //bad request

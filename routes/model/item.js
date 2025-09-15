@@ -27,6 +27,12 @@ const itemSchema = new mongoose.Schema({
         const now = new Date();
         
         return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    },
+
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 }
 
