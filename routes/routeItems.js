@@ -12,7 +12,7 @@ router.use(authenticeJWT);
 router.get("/item", async (ctx) => { 
     try {
         //hämtar alla objekt
-        const allItems = await itemModel.find({ userId: ctx.state.user.id }); 
+        const allItems = await itemModel.find({ userId: ctx.state.user._id }); 
         
         //kollar om de är fler än 0 objekt
         if (allItems.length > 0) {
@@ -48,7 +48,7 @@ router.post("/item", async (ctx) => {
             itemStock,
             itemPrice,
             itemImage,
-            userId: ctx.state.user.id  // Add the user ID from the JWT
+            userId: ctx.state.user._id  // Add the user ID from the JWT
         });
 
         //sparar
